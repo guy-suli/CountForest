@@ -18,17 +18,19 @@ export AWS_DEFAULT_REGION=us-west-2
 echo "<h1>Deployed via Terraform</h1>" | sudo tee /var/www/html/index.html
 EOF
   tags = {
-    Name = "${local.resource_prefix.value}-ec2"
+    Name      = "${local.resource_prefix.value}-ec2"
+    yor_trace = "60882366-413c-4438-9259-5682464f34a3"
   }
 }
 
 resource "aws_ebs_volume" "web_host_storage" {
   # unencrypted volume
   availability_zone = "${var.availability_zone}"
-  encrypted         = false  # Setting this causes the volume to be recreated on apply 
-  size = 1
+  encrypted         = false # Setting this causes the volume to be recreated on apply 
+  size              = 1
   tags = {
-    Name = "${local.resource_prefix.value}-ebs"
+    Name      = "${local.resource_prefix.value}-ebs"
+    yor_trace = "6abd6b52-2aa4-4681-b9bc-e82878e8f4ab"
   }
 }
 
@@ -37,7 +39,8 @@ resource "aws_ebs_snapshot" "example_snapshot" {
   volume_id   = "${aws_ebs_volume.web_host_storage.id}"
   description = "${local.resource_prefix.value}-ebs-snapshot"
   tags = {
-    Name = "${local.resource_prefix.value}-ebs-snapshot"
+    Name      = "${local.resource_prefix.value}-ebs-snapshot"
+    yor_trace = "82cc4f1f-02ee-4312-befb-221bf58f6051"
   }
 }
 
@@ -75,6 +78,9 @@ resource "aws_security_group" "web-node" {
     "0.0.0.0/0"]
   }
   depends_on = [aws_vpc.web_vpc]
+  tags = {
+    yor_trace = "31e682ef-7f23-4287-9081-c4f8ba097b5f"
+  }
 }
 
 resource "aws_vpc" "web_vpc" {
@@ -82,7 +88,8 @@ resource "aws_vpc" "web_vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
   tags = {
-    Name = "${local.resource_prefix.value}-vpc"
+    Name      = "${local.resource_prefix.value}-vpc"
+    yor_trace = "c7af8871-c44a-4b13-872c-d11c9c9669b5"
   }
 }
 
@@ -93,7 +100,8 @@ resource "aws_subnet" "web_subnet" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${local.resource_prefix.value}-subnet"
+    Name      = "${local.resource_prefix.value}-subnet"
+    yor_trace = "e4fc356a-131e-4872-9399-9024a09f8dd3"
   }
 }
 
@@ -104,7 +112,8 @@ resource "aws_subnet" "web_subnet2" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${local.resource_prefix.value}-subnet2"
+    Name      = "${local.resource_prefix.value}-subnet2"
+    yor_trace = "8c56ad57-a715-432f-8f3a-8322700b0e80"
   }
 }
 
@@ -113,7 +122,8 @@ resource "aws_internet_gateway" "web_igw" {
   vpc_id = aws_vpc.web_vpc.id
 
   tags = {
-    Name = "${local.resource_prefix.value}-igw"
+    Name      = "${local.resource_prefix.value}-igw"
+    yor_trace = "f302907e-d746-482b-8090-d5eb46372690"
   }
 }
 
@@ -121,7 +131,8 @@ resource "aws_route_table" "web_rtb" {
   vpc_id = aws_vpc.web_vpc.id
 
   tags = {
-    Name = "${local.resource_prefix.value}-rtb"
+    Name      = "${local.resource_prefix.value}-rtb"
+    yor_trace = "2a860fe1-a478-446b-99e8-67951c575496"
   }
 }
 
@@ -151,7 +162,8 @@ resource "aws_network_interface" "web-eni" {
   private_ips = ["172.16.10.100"]
 
   tags = {
-    Name = "${local.resource_prefix.value}-primary_network_interface"
+    Name      = "${local.resource_prefix.value}-primary_network_interface"
+    yor_trace = "41ef3e96-5367-47d4-91fc-4a55a9aaa21e"
   }
 }
 
@@ -165,6 +177,7 @@ resource "aws_flow_log" "vpcflowlogs" {
   tags = {
     Name        = "${local.resource_prefix.value}-flowlogs"
     Environment = local.resource_prefix.value
+    yor_trace   = "54d3cff7-466a-43fd-8ca8-8def8f73353f"
   }
 }
 
@@ -175,6 +188,7 @@ resource "aws_s3_bucket" "flowbucket" {
   tags = {
     Name        = "${local.resource_prefix.value}-flowlogs"
     Environment = local.resource_prefix.value
+    yor_trace   = "dc9d690c-4d30-44c4-b881-f8e60003b47f"
   }
 }
 
