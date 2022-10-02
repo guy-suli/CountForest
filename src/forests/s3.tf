@@ -19,17 +19,20 @@ resource "aws_s3_bucket_object" "data_object" {
   tags = {
     Name        = "${local.resource_prefix.value}-customer-master"
     Environment = local.resource_prefix.value
+    
   }
 }
 
 resource "aws_s3_bucket" "financials" {
   # bucket is not encrypted
   # bucket does not have access logs
+  
   # bucket does not have versioning
   bucket        = "${local.resource_prefix.value}-financials"
   acl           = "private"
   force_destroy = true
   tags = {
+    
     Name        = "${local.resource_prefix.value}-financials"
     Environment = local.resource_prefix.value
   }
@@ -37,6 +40,8 @@ resource "aws_s3_bucket" "financials" {
 }
 
 resource "aws_s3_bucket" "operations" {
+  
+  
   # bucket is not encrypted
   # bucket does not have access logs
   bucket = "${local.resource_prefix.value}-operations"
@@ -56,6 +61,7 @@ resource "aws_s3_bucket" "data_science" {
   # bucket is not encrypted
   bucket = "${local.resource_prefix.value}-data-science"
   acl    = "private"
+  
   versioning {
     enabled = false
   }
@@ -64,6 +70,9 @@ resource "aws_s3_bucket" "data_science" {
     target_prefix = "log/"
   }
   force_destroy = true
+  
+  
+  
 }
 
 resource "aws_s3_bucket" "logs" {
